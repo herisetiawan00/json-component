@@ -5,6 +5,12 @@ import 'package:json_component/common/types/component_type.dart';
 import 'package:json_component/component_builder.dart';
 import 'package:json_component/components/base_json_component.dart';
 
+export 'package:json_component/common/extensions/string_extension.dart';
+export 'package:json_component/common/types/component_exception.dart';
+export 'package:json_component/common/types/component_type.dart';
+export 'package:json_component/components/base_json_component.dart';
+
+
 class JsonComponent {
   final Map<String, ComponentBuilder> _registeredJson = {};
   final Map<String, void Function(ComponentState)> _registeredState = {};

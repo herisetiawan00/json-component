@@ -8,7 +8,7 @@ abstract class BaseJsonComponent {
 
   BaseJsonComponent.fromJson(ComponentJson json)
       : id = json['_id'],
-        key = json['key'],
+        key = json['_key'],
         state = json['_state'];
 
   Widget build(BuildContext context, ComponentContext cContext);

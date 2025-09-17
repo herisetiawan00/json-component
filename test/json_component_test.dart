@@ -82,7 +82,7 @@ void main() {
       final ComponentJson component = {
         '_id': componentId,
         '_state': {'data': 'test'},
-        'key': key,
+        '_key': key,
         'data': '\$state.data',
       };
 
