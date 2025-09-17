@@ -2,16 +2,13 @@ name: json_component
 description: "Flutter dynamic component from json"
 version: 0.0.2
 homepage:
-
 environment:
   sdk: '>=3.4.4 <4.0.0'
   flutter: '>=3.3.0'
-
 dependencies:
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -31,3 +28,5 @@ flutter:
         pluginClass: JsonComponentPlugin
       windows:
         pluginClass: JsonComponentPluginCApi
+      web:
+        pluginClass: JsonComponentPlugin
