@@ -13,5 +13,7 @@ abstract class BaseJsonComponent {
 
   Widget build(BuildContext context, ComponentContext cContext);
 
-  void initState();
+  void initState() {}
+
+  void dispose() {}
 }

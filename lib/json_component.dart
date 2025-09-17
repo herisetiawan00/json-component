@@ -3,6 +3,7 @@ import 'package:json_component/common/extensions/null_extension.dart';
 import 'package:json_component/common/types/component_exception.dart';
 import 'package:json_component/common/types/component_type.dart';
 import 'package:json_component/component_builder.dart';
+import 'package:json_component/components/base_json_component.dart';
 
 class JsonComponent {
   final Map<String, ComponentBuilder> _registeredJson = {};
@@ -18,27 +19,30 @@ class JsonComponent {
 
   static JsonComponent get instance => _instance;
 
-  factory JsonComponent() => instance;
-
-  void register(String id, ComponentBuilder builder) {
+  static void register(String id, ComponentBuilder builder) {
     if (containsId(id)) {
-      throw ComponentRegisteredException(id);
+      throw ComponentRegisteredException(id, StackTrace.current);
     }
 
-    _registeredJson[id] = builder;
+    instance._registeredJson[id] = builder;
   }
 
-  bool containsId(String id) {
-    return _registeredJson.containsKey(id);
+  static bool containsId(String id) {
+    return instance._registeredJson.containsKey(id);
   }
 
-  void setState(String key, ComponentState state) {
-    _registeredState[key].let(
+  static void setState(String key, ComponentState state) {
+    instance._registeredState[key].let(
       (callback) => callback.call(state),
     );
   }
 
-  Widget build(
+  static void clear() {
+    instance._registeredJson.clear();
+    instance._registeredState.clear();
+  }
+
+  static Widget build(
     BuildContext context,
     ComponentJson json, [
     ComponentContext cContext = const {},
@@ -46,25 +50,30 @@ class JsonComponent {
     final componentId = json['_id'];
 
     if (componentId == null) {
-      throw ComponentInvalidException(json);
+      throw ComponentInvalidException(json, StackTrace.current);
     }
 
-    final builder = _registeredJson[componentId];
+    final builder = instance._registeredJson[componentId];
 
     if (builder == null) {
-      throw ComponentNotFoundException(componentId);
+      throw ComponentNotFoundException(componentId, StackTrace.current);
     }
 
-    final component = builder(json);
+    BaseJsonComponent component;
+    try {
+      component = builder(json);
+    } catch (e, stackTrace) {
+      throw ComponentParsingException(json, stackTrace);
+    }
 
     return ComponentBuilderWidget(
       context: cContext,
       component: component,
       setState: (callback) => component.key.let(
-        (key) => _registeredState[key] = callback,
+        (key) => instance._registeredState[key] = callback,
       ),
       onDispose: () => component.key.let(
-        _registeredState.remove,
+        instance._registeredState.remove,
       ),
     );
   }

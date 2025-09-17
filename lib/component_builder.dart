@@ -42,6 +42,7 @@ class _ComponentBuilderWidgetState extends State<ComponentBuilderWidget> {
   void dispose() {
     _stateNotifier?.dispose();
     widget.onDispose?.call();
+    widget.component.dispose();
     super.dispose();
   }
 
